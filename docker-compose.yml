@@ -11,27 +11,27 @@ services:
     ports:
       - 5432:5432
 
-  # backend:
-  #   build: ./backend
-  #   env_file: ./backend/.env
-  #   ports:
-  #     - 6001:6001
-  #   volumes:
-  #     - ./backend:/app
-  #     - /app/node_modules
-  #   depends_on:
-  #     - base_de_datos
-
-  backend-rust:
-    env_file: ./backend-rust/.env
-    build:
-      context: ./backend-rust
-      args:
-        DATABASE_URL: ${DATABASE_URL}
+  backend:
+    image: catherinespejo/backend-todo-list:lastest
+    env_file: ./backend/.env
     ports:
-      - '6001:6001'
+      - 6001:6001
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
     depends_on:
       - base_de_datos
+
+  # backend-rust:
+  #   env_file: ./backend-rust/.env
+  #   build:
+  #     context: ./backend-rust
+  #     args:
+  #       DATABASE_URL: ${DATABASE_URL}
+  #   ports:
+  #     - '6001:6001'
+  #   depends_on:
+  #     - base_de_datos
 
   frontend:
     build: ./frontend
@@ -42,5 +42,5 @@ services:
       - 3000:3000
     env_file: ./frontend/.env
     depends_on:
-      # - backend
-      - backend-rust
+       - backend
+      #- backend-rust
