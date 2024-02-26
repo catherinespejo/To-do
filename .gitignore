@@ -1,5 +1,8 @@
 
 # No subir a github los archivos de las variables de entorno
+.env
 backend/.env
 frontend/.env
 database/.env
+backend-rust/.env
+
