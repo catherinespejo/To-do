@@ -4,15 +4,25 @@ const pool = require('../db/index');
 
 // Obtener todas las tareas
 router.get('/', async (req, res) => {
-  const { rows } = await pool.query('SELECT * FROM tasks ORDER BY id ASC');
-  res.status(200).json(rows);
+  // Intentamos obtener todas las tareas
+  try {
+    const { rows } = await pool.query('SELECT * FROM tasks ORDER BY id ASC');
+    res.status(200).json(rows);
+  } catch (error) {
+    // Si hay un error, lo enviamos como respuesta
+    res.status(500).json({ message: error.message });
+  }
 });
 
 // Añadir una nueva tarea
 router.post('/', async (req, res) => {
-  const { title, completed } = req.body;
-  const { rows } = await pool.query('INSERT INTO tasks (title, completed) VALUES ($1, $2) RETURNING *', [title, completed]);
-  res.status(201).json(rows[0]);
+  try {
+    const { title, completed } = req.body;
+    const { rows } = await pool.query('INSERT INTO tasks (title, completed) VALUES ($1, $2) RETURNING *', [title, completed]);
+    res.status(201).json(rows[0]);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 // Actualizar una tarea existente

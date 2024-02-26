@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { apiClient } from './axios';
 import TaskList from './TaskList';
 import AddTaskForm from './AddTaskForm';
 
@@ -11,12 +11,19 @@ function App() {
   }, []);
 
   const fetchTasks = async () => {
-    const response = await axios.get('/api/tasks');
-    setTasks(response.data);
+    try {
+      const response = await apiClient.get('/api/tasks/');
+      console.log('test3')
+      console.log({ test: response.data })
+      setTasks(response.data);
+    } catch (error) {
+      console.log('test5545454')
+      console.log({ error: error.response });
+    }
   };
 
   const addTask = async (title) => {
-    await axios.post('/api/tasks', { title, completed: false });
+    await apiClient.post('/api/tasks/', { title, completed: false });
     fetchTasks();
   };
 

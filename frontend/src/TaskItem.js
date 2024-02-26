@@ -1,9 +1,9 @@
 import React from 'react';
-import axios from 'axios';
+import { apiClient } from './axios';
 
 function TaskItem({ task, fetchTasks }) {
   const toggleCompleted = async () => {
-    await axios.put(`/api/tasks/${task.id}`, {
+    await apiClient.put(`/api/tasks/${task.id}`, {
       ...task,
       completed: !task.completed,
     });
@@ -11,7 +11,7 @@ function TaskItem({ task, fetchTasks }) {
   };
 
   const deleteTask = async () => {
-    await axios.delete(`/api/tasks/${task.id}`);
+    await apiClient.delete(`/api/tasks/${task.id}`);
     fetchTasks();
   };
 

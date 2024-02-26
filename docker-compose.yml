@@ -1,28 +1,30 @@
 version: '3.8'
 
 services:
-  db:
+  base_de_datos:
     image: postgres:13
-      
     volumes:
       - ./database/postgresql.conf:/etc/postgresql.conf
       - ./database/setup.sql:/docker-entrypoint-initdb.d/setup.sql
     environment:
-      POSTGRES_DB: tododb
-      POSTGRES_USER: todoapp
-      POSTGRES_PASSWORD: secret
+      - POSTGRES_USER=todoapp
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=tododb
+      - POSTGRES_PORT=5432
     ports:
-      - "5432:5432"
-      
+      - 5432:5432
 
-  app:
+  backend:
     build: ./backend
     ports:
-      - "6001:6001"
+      - 6001:6001
     environment:
-      DATABASE_URL: postgresql://todoapp:secret@db/tododb
+      - DATABASE_URL=postgres://todoapp:secret@base_de_datos/tododb?charset=UTF8
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
     depends_on:
-      - db
+      - base_de_datos
 
   frontend:
     build: ./frontend
@@ -33,9 +35,9 @@ services:
       - "3000:3000"
     environment:
       - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_API_URL=http://localhost:6001
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
     depends_on:
-      - app
-
-volumes:
-  postgres_data:
-
+      - backend
