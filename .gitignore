@@ -1,0 +1,5 @@
+
+# No subir a github los archivos de las variables de entorno
+backend/.env
+frontend/.env
+database/.env
